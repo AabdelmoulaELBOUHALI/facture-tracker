@@ -1,8 +1,11 @@
+import { useRef } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import { DownloadChartButton } from '../DownloadChartButton';
 
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
 export function ProjectTypeChart({ projects }) {
+  const chartRef = useRef(null);
   const typeCount = projects.reduce((acc, project) => {
     const type = project.type || 'Non défini';
     acc[type] = (acc[type] || 0) + 1;
@@ -15,8 +18,11 @@ export function ProjectTypeChart({ projects }) {
   }));
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-      <h3 className="text-sm font-medium text-gray-900 mb-3">Répartition par Type</h3>
+    <div ref={chartRef} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+      <div className="flex justify-between items-center mb-3">
+        <h3 className="text-sm font-medium text-gray-900">Répartition par Type</h3>
+        <DownloadChartButton chartRef={chartRef} fileName="repartition-type" />
+      </div>
       <ResponsiveContainer width="100%" height={300}>
         <PieChart>
           <Pie

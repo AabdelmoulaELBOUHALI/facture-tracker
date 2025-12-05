@@ -1,9 +1,12 @@
+import { useRef } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { formatNumber } from '../../utils/formatNumber';
+import { DownloadChartButton } from '../DownloadChartButton';
 
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
 export function SiteDistributionChart({ projects }) {
+  const chartRef = useRef(null);
   // Group by site and calculate totals
   const siteData = projects.reduce((acc, invoice) => {
     const existing = acc.find(item => item.site === invoice.site);
@@ -48,8 +51,11 @@ export function SiteDistributionChart({ projects }) {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-      <h3 className="text-lg font-medium text-gray-900 mb-4">Distribution par Site</h3>
+    <div ref={chartRef} className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-lg font-medium text-gray-900">Distribution par Site</h3>
+        <DownloadChartButton chartRef={chartRef} fileName="distribution-site" />
+      </div>
 
       {/* Custom Legend with site names */}
       <div className="flex gap-3 mb-3 flex-wrap">

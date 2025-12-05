@@ -1,7 +1,10 @@
+import { useRef } from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, ReferenceLine } from 'recharts';
 import { formatNumber } from '../../utils/formatNumber';
+import { DownloadChartButton } from '../DownloadChartButton';
 
 export function PaymentDelayChart({ projects }) {
+  const chartRef = useRef(null);
   // Calculate payment delays - only for paid invoices
   const paidInvoices = projects.filter(inv => inv.datePaiement && inv.dateEcheance);
 
@@ -57,8 +60,11 @@ export function PaymentDelayChart({ projects }) {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-      <h3 className="text-lg font-medium text-gray-900 mb-4">Analyse des Délais de Paiement</h3>
+    <div ref={chartRef} className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+      <div className="flex justify-between items-center mb-2">
+        <h3 className="text-lg font-medium text-gray-900">Analyse des Délais de Paiement</h3>
+        <DownloadChartButton chartRef={chartRef} fileName="analyse-delais-paiement" />
+      </div>
       <p className="text-sm text-gray-600 mb-4">Délai de paiement par facture (jours avant/après échéance)</p>
 
       {/* Legend */}

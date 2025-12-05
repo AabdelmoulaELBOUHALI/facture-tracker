@@ -1,8 +1,11 @@
+import { useRef } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { formatNumber } from '../../utils/formatNumber';
 import { StatusBadge } from '../StatusBadge';
+import { DownloadChartButton } from '../DownloadChartButton';
 
 export function DueStatusChart({ projects }) {
+  const chartRef = useRef(null);
   // Status2: "Echue" (Overdue) vs "Non Echue" (Not due yet)
   const echueCount = projects.filter(p => p.status2 === 'Echue').length;
   const nonEchueCount = projects.filter(p => p.status2 === 'Non Echue').length;
@@ -57,8 +60,11 @@ export function DueStatusChart({ projects }) {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-      <h3 className="text-lg font-medium text-gray-900 mb-4">Statut d'Échéance</h3>
+    <div ref={chartRef} className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-lg font-medium text-gray-900">Statut d'Échéance</h3>
+        <DownloadChartButton chartRef={chartRef} fileName="statut-echeance" />
+      </div>
 
       <div className="flex gap-4 mb-4 flex-wrap">
         {countData.map((entry, index) => (

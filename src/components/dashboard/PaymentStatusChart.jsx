@@ -1,9 +1,12 @@
+import { useRef } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { PAYMENT_STATUS } from '../../types/project';
 import { StatusBadge } from '../StatusBadge';
 import { formatNumber } from '../../utils/formatNumber';
+import { DownloadChartButton } from '../DownloadChartButton';
 
 export function PaymentStatusChart({ projects }) {
+  const chartRef = useRef(null);
   const payeAmount = projects
     .filter(p => p.statue1Facture === PAYMENT_STATUS.PAID)
     .reduce((sum, p) => sum + (p.montantHT || 0), 0);
@@ -53,8 +56,11 @@ export function PaymentStatusChart({ projects }) {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-      <h3 className="text-lg font-medium text-gray-900 mb-4">Statut de Paiement</h3>
+    <div ref={chartRef} className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-lg font-medium text-gray-900">Statut de Paiement</h3>
+        <DownloadChartButton chartRef={chartRef} fileName="statut-paiement" />
+      </div>
 
       <div className="flex gap-4 mb-4 flex-wrap">
         {paymentData.map((entry, index) => (

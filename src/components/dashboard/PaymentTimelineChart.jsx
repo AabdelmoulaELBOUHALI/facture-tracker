@@ -1,7 +1,10 @@
+import { useRef } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { formatNumber } from '../../utils/formatNumber';
+import { DownloadChartButton } from '../DownloadChartButton';
 
 export function PaymentTimelineChart({ projects }) {
+  const chartRef = useRef(null);
   // Group payments by month
   const monthlyData = {};
 
@@ -49,8 +52,11 @@ export function PaymentTimelineChart({ projects }) {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-      <h3 className="text-lg font-medium text-gray-900 mb-4">Chronologie des Paiements</h3>
+    <div ref={chartRef} className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+      <div className="flex justify-between items-center mb-2">
+        <h3 className="text-lg font-medium text-gray-900">Chronologie des Paiements</h3>
+        <DownloadChartButton chartRef={chartRef} fileName="chronologie-paiements" />
+      </div>
       <p className="text-sm text-gray-600 mb-4">Montants payés par mois</p>
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={chartData}>

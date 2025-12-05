@@ -1,6 +1,8 @@
+import { useRef } from 'react';
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart } from 'recharts';
 import { MONTHS, MONTH_LABELS } from '../../types/project';
 import { formatNumber } from '../../utils/formatNumber';
+import { DownloadChartButton } from '../DownloadChartButton';
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -25,6 +27,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export function ProgressChart({ projects }) {
+  const chartRef = useRef(null);
   // Calculate cumulative data per month
   const data = MONTHS.map((month, index) => {
     // Get all months up to and including current month
@@ -50,8 +53,11 @@ export function ProgressChart({ projects }) {
   });
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-      <h3 className="text-sm font-medium text-gray-900 mb-3">Évolution Cumulée des Dépenses</h3>
+    <div ref={chartRef} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+      <div className="flex justify-between items-center mb-3">
+        <h3 className="text-sm font-medium text-gray-900">Évolution Cumulée des Dépenses</h3>
+        <DownloadChartButton chartRef={chartRef} fileName="evolution-cumulee" />
+      </div>
       <ResponsiveContainer width="100%" height={300}>
         <AreaChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />

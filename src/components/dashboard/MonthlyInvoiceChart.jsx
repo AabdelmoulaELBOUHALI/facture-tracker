@@ -1,8 +1,11 @@
+import { useRef } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { formatNumber } from '../../utils/formatNumber';
 import { PAYMENT_STATUS } from '../../types/project';
+import { DownloadChartButton } from '../DownloadChartButton';
 
 export function MonthlyInvoiceChart({ projects }) {
+  const chartRef = useRef(null);
   // Group invoices by month from dateFacture
   const monthlyData = projects.reduce((acc, invoice) => {
     if (!invoice.dateFacture) return acc;
@@ -54,8 +57,11 @@ export function MonthlyInvoiceChart({ projects }) {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-      <h3 className="text-lg font-medium text-gray-900 mb-4">Évolution Mensuelle des Factures</h3>
+    <div ref={chartRef} className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-lg font-medium text-gray-900">Évolution Mensuelle des Factures</h3>
+        <DownloadChartButton chartRef={chartRef} fileName="evolution-mensuelle" />
+      </div>
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={sortedData}>
           <CartesianGrid strokeDasharray="3 3" />

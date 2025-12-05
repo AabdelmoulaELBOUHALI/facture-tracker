@@ -1,8 +1,11 @@
+import { useRef } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { formatNumber } from '../../utils/formatNumber';
 import { PAYMENT_STATUS } from '../../types/project';
+import { DownloadChartButton } from '../DownloadChartButton';
 
 export function ContractChart({ projects }) {
+  const chartRef = useRef(null);
   // Group by contract and calculate totals
   const contractData = projects.reduce((acc, invoice) => {
     const existing = acc.find(item => item.contrat === invoice.contratNo);
@@ -47,8 +50,11 @@ export function ContractChart({ projects }) {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-      <h3 className="text-lg font-medium text-gray-900 mb-4">Paiements par Contrat</h3>
+    <div ref={chartRef} className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-lg font-medium text-gray-900">Paiements par Contrat</h3>
+        <DownloadChartButton chartRef={chartRef} fileName="paiements-contrat" />
+      </div>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={contractData}>
           <CartesianGrid strokeDasharray="3 3" />

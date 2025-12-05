@@ -1,5 +1,7 @@
+import { useRef } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { formatNumber } from '../../utils/formatNumber';
+import { DownloadChartButton } from '../DownloadChartButton';
 
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
@@ -16,6 +18,7 @@ const CustomTooltip = ({ active, payload }) => {
 };
 
 export function BudgetChart({ projects }) {
+  const chartRef = useRef(null);
   const data = projects.map(project => ({
     name: project.project.length > 20 ? project.project.substring(0, 20) + '...' : project.project,
     fullName: project.project,
@@ -23,8 +26,11 @@ export function BudgetChart({ projects }) {
   })).slice(0, 8);
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-      <h3 className="text-sm font-medium text-gray-900 mb-3">Budget par Projet</h3>
+    <div ref={chartRef} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+      <div className="flex justify-between items-center mb-3">
+        <h3 className="text-sm font-medium text-gray-900">Budget par Projet</h3>
+        <DownloadChartButton chartRef={chartRef} fileName="budget-projet" />
+      </div>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />

@@ -1,7 +1,10 @@
+import { useRef } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { formatNumber } from '../../utils/formatNumber';
+import { DownloadChartButton } from '../DownloadChartButton';
 
 export function SupplierChart({ projects }) {
+  const chartRef = useRef(null);
   // Group by supplier and calculate totals
   const supplierData = projects.reduce((acc, invoice) => {
     const existing = acc.find(item => item.fournisseur === invoice.fournisseur);
@@ -39,8 +42,11 @@ export function SupplierChart({ projects }) {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-      <h3 className="text-lg font-medium text-gray-900 mb-4">Montant HT par Fournisseur</h3>
+    <div ref={chartRef} className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-lg font-medium text-gray-900">Montant HT par Fournisseur</h3>
+        <DownloadChartButton chartRef={chartRef} fileName="montant-fournisseur" />
+      </div>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={sortedData}>
           <CartesianGrid strokeDasharray="3 3" />

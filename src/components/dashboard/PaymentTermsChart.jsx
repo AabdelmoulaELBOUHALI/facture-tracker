@@ -1,6 +1,9 @@
+import { useRef } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { DownloadChartButton } from '../DownloadChartButton';
 
 export function PaymentTermsChart({ projects }) {
+  const chartRef = useRef(null);
   // Group by payment terms
   const termsData = projects.reduce((acc, invoice) => {
     const term = invoice.delaiPaiement || 'Non spécifié';
@@ -56,8 +59,11 @@ export function PaymentTermsChart({ projects }) {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-      <h3 className="text-lg font-medium text-gray-900 mb-4">Répartition des Délais de Paiement</h3>
+    <div ref={chartRef} className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+      <div className="flex justify-between items-center mb-2">
+        <h3 className="text-lg font-medium text-gray-900">Répartition des Délais de Paiement</h3>
+        <DownloadChartButton chartRef={chartRef} fileName="delais-paiement" />
+      </div>
       <p className="text-sm text-gray-600 mb-4">Distribution des termes de paiement contractuels</p>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={sortedData}>

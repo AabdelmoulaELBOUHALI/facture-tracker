@@ -1,8 +1,11 @@
+import { useRef } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { MONTHS, MONTH_LABELS } from '../../types/project';
 import { formatNumber } from '../../utils/formatNumber';
+import { DownloadChartButton } from '../DownloadChartButton';
 
 export function MonthlyComparisonChart({ projects }) {
+  const chartRef = useRef(null);
   const data = MONTHS.map(month => {
     const totalPrevu = projects.reduce((sum, p) => sum + (p[month]?.prevu || 0), 0);
     const totalRealise = projects.reduce((sum, p) => sum + (p[month]?.realise || 0), 0);
@@ -15,8 +18,11 @@ export function MonthlyComparisonChart({ projects }) {
   });
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-      <h3 className="text-sm font-medium text-gray-900 mb-3">Comparaison Prévu vs Réalisé</h3>
+    <div ref={chartRef} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+      <div className="flex justify-between items-center mb-3">
+        <h3 className="text-sm font-medium text-gray-900">Comparaison Prévu vs Réalisé</h3>
+        <DownloadChartButton chartRef={chartRef} fileName="comparaison-prevu-realise" />
+      </div>
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />
